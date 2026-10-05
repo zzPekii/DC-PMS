@@ -2,8 +2,7 @@ namespace DCPMS;
 
 public enum PaymentMethod
 {
+    Alipay,
     CreditCard,
-    DebitCard,
-    PayPal,
-    Cash
+    BankTransfer
 }
