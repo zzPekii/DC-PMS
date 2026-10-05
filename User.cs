@@ -86,6 +86,20 @@ public class User
         return result;
     }
 
+    public Order GetMostExpensiveOrder()
+    {
+        Order mostExpensiveOrder = Orders[0];
+        foreach(Order order in Orders)
+        {
+            if (order.GetTotalOrderPrice() > mostExpensiveOrder.GetTotalOrderPrice())
+            {
+                mostExpensiveOrder = order;
+            } 
+        }
+        return mostExpensiveOrder;
+    }
+
+
     public void DisplayOrders()
     {
         Console.WriteLine($"===== Orders for {Name} =====");
