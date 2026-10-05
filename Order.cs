@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+
 namespace DCPMS;
 
 public class Order
@@ -44,6 +46,36 @@ public class Order
         }
 
         return mostExpensive;
+    }
+
+    public List<PaintProduct> GetProductsByPriceRange(decimal minPrice, decimal maxPrice)
+    {
+        List<PaintProduct> result = new List<PaintProduct>();
+        foreach (PaintProduct product in Products)
+        {
+            if (product.Price > minPrice && product.Price < maxPrice)
+            {
+                result.Add(product);
+            }
+        }
+        return result;
+    }
+
+    public Dictionary<PaintType, decimal> GetTotalPriceByPaintType()
+    {
+        Dictionary<PaintType, decimal> result = new Dictionary<PaintType, decimal>();
+        foreach (PaintProduct product in Products)
+        {
+            if (result.ContainsKey(product.Type))
+            {
+                result[product.Type] += product.Price;
+            } 
+            else
+            {
+                result.Add(product.Type, product.Price);
+            }
+        }
+        return result;
     }
 
     public void DisplayOrder()
