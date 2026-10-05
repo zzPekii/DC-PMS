@@ -3,9 +3,9 @@ namespace DCPMS;
 public class Order
 {
     public DateTime CreatedAt { get; set; }
-    public PaintProduct[] Products { get; set; }
+    public List<PaintProduct> Products { get; set; }
 
-    public Order(PaintProduct[] products)
+    public Order(List<PaintProduct> products)
     {
         CreatedAt = DateTime.Now;
         Products = products;
