@@ -19,7 +19,7 @@ public class PaintProduct : IBuyable
     public int ProductId { get; private set; }
     public PaintProduct (int productId, string name, PaintType type, PaintSpecification specification, Brand brand, decimal price)
     {
-        ProductId = ProductId;
+        ProductId = productId;
         Name = name;
         Type = type;
         Specification = specification;
