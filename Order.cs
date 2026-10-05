@@ -21,6 +21,31 @@ public class Order
         return total;
     }
 
+    // remove product instance by its id
+    public void RemoveProduct(int productId)
+    {
+        PaintProduct product = Products.Find(p => p.ProductId == productId);
+        if (product != null)
+        {
+            Products.Remove(product);
+        }
+    }
+
+    public PaintProduct GetMostExpensivePaintProduct()
+    {
+        PaintProduct mostExpensive = Products[0];
+
+        foreach (PaintProduct product in Products)
+        {
+            if (product.Price > mostExpensive.Price)
+            {
+                mostExpensive = product;
+            }
+        }
+
+        return mostExpensive;
+    }
+
     public void DisplayOrder()
     {
         Console.WriteLine("===== Order =====");
