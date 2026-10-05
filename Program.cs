@@ -16,13 +16,13 @@ public class Program
         PaintProduct paint2 = new PaintProduct("Super Enamel", PaintType.Gloss, spec2, dulux, 80m);
         PaintProduct paint3 = new PaintProduct("Easy Coat", PaintType.SemiGloss, spec3, taubmans, 70m);
 
-        PaintProduct[] storeProducts = {paint1, paint2, paint3};
+        List<PaintProduct> storeProducts = new List<PaintProduct> {paint1, paint2, paint3};
         PaintStore store = new PaintStore(storeProducts);
 
         store.DisplayProducts();
         Console.WriteLine();
 
-        PaintProduct[] orderProducts = {paint1, paint3};
+        List<PaintProduct> orderProducts = new List<PaintProduct> {paint1, paint3};
 
         Order order = new Order(orderProducts);
         order.DisplayOrder();
