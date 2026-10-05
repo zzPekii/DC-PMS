@@ -8,13 +8,18 @@ public class Payment
     public PaymentMethod Method { get; set; }
     public DateTime CreatedAt { get; private set; }
 
-    public Payment(int paymentId, decimal amount, PaymentStatus status, PaymentMethod method)
+    public User User { get; set; }
+    public Order Order { get; set; }
+
+    public Payment(int paymentId, decimal amount, PaymentStatus status, PaymentMethod method, User user, Order order)
     {
         PaymentId = paymentId;
         Amount = amount;
         Status = status;
         Method = method;
         CreatedAt = DateTime.Now;
+        User = user;
+        Order = order;
     }
 
     public void DisplayPayment()
