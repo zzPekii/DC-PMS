@@ -99,6 +99,20 @@ public class User
         return mostExpensiveOrder;
     }
 
+    public Order GetLatestOrder()
+    {
+        Order latestOrder = Orders[0];
+
+        foreach (Order order in Orders)
+        {
+            if (order.CreatedAt > latestOrder.CreatedAt)
+            {
+                latestOrder = order;
+            }
+        }
+
+        return latestOrder;
+    }
 
     public void DisplayOrders()
     {
