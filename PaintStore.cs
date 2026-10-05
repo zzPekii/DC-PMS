@@ -2,9 +2,9 @@ namespace DCPMS;
 
 public class PaintStore
 {
-    public PaintProduct[] Products { get; set; }
+    public List<PaintProduct> Products { get; set; }
 
-    public PaintStore(PaintProduct[] products)
+    public PaintStore(List<PaintProduct> products)
     {
         Products = products;
     }
