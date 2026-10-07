@@ -1,0 +1,15 @@
+/Users/dawn/Desktop/camp/DC-PMS/bin/Debug/net10.0/DC-PMS
+/Users/dawn/Desktop/camp/DC-PMS/bin/Debug/net10.0/DC-PMS.deps.json
+/Users/dawn/Desktop/camp/DC-PMS/bin/Debug/net10.0/DC-PMS.runtimeconfig.json
+/Users/dawn/Desktop/camp/DC-PMS/bin/Debug/net10.0/DC-PMS.dll
+/Users/dawn/Desktop/camp/DC-PMS/bin/Debug/net10.0/DC-PMS.pdb
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.GeneratedMSBuildEditorConfig.editorconfig
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.AssemblyInfoInputs.cache
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.AssemblyInfo.cs
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.csproj.CoreCompileInputs.cache
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.sourcelink.json
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.dll
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/refint/DC-PMS.dll
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.pdb
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.genruntimeconfig.cache
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/ref/DC-PMS.dll
