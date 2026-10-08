@@ -1,3 +1,6 @@
+using System.Dynamic;
+using System.Runtime.InteropServices;
+
 namespace DCPMS;
 
 public class PaintProduct : IBuyable
@@ -13,8 +16,10 @@ public class PaintProduct : IBuyable
     public readonly decimal TaxRate = 0.10m;
     public const decimal DefaultDiscount = 0.05m;
 
-    public PaintProduct (string name, PaintType type, PaintSpecification specification, Brand brand, decimal price)
+    public int ProductId { get; private set; }
+    public PaintProduct (int productId, string name, PaintType type, PaintSpecification specification, Brand brand, decimal price)
     {
+        ProductId = productId;
         Name = name;
         Type = type;
         Specification = specification;
