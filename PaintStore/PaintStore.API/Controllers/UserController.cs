@@ -63,5 +63,17 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
 
-
+    [HttpGet("email/{email}")]
+    public ActionResult<User> GetUserByEmail(string email)
+    {
+        User user = Users.FirstOrDefault(p => p.Email == email);
+        if (user == null)
+        {
+            // 404 not found
+            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/Users/email/{email}");
+            return NotFound("Can not find the user");
+        }
+        System.Console.WriteLine($"HTTP [GET] 200 OK /api/Users/email/{email}");
+        return Ok(user);
+    }
 }
