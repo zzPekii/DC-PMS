@@ -43,9 +43,24 @@ public class UsersController : ControllerBase
         if (user == null)
         {
             // 404 not found
+            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/Users/{id}");
             return NotFound("Can not find the user");
         }
+        System.Console.WriteLine($"HTTP [GET] 200 OK /api/Users/{id}");
         return Ok(user);
+    }
+
+    [HttpGet("name/{name}")]
+    public ActionResult<List<User>> GetUserByName(string name)
+    {
+        List<User> users = Users.Where(u => u.Name == name).ToList();
+        if (users.Count == 0)
+        {
+            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/Users/{name}");
+            return NotFound("No such name user");
+        }
+        System.Console.WriteLine($"HTTP [GET] 200 OK /api/User/{name}");
+        return Ok(users);
     }
 
 
