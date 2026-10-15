@@ -35,4 +35,17 @@ public class UsersController : ControllerBase
         System.Console.WriteLine("HTTP [GET] 200 OK /api/Users");
         return Ok(Users);
     }
+
+    [HttpGet("{id:int}")]
+    public ActionResult<User> GetUserById(int id)
+    {
+        List<User> users = Users;
+        User user = users.FirstOrDefault(p => p.Id == id);
+        if (user == null)
+        {
+            // 404 not found
+            return NotFound("Can not find the user");
+        }
+        return Ok(user);
+    }
 }
