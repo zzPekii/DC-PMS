@@ -2,18 +2,19 @@ namespace PaintStore.Model;
 
 public class User
 {
-    public int UserId { get; private set; }
+    public int Id { get; private set; }
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
     public string Name { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string Phone { get; set; } = string.Empty;
 
-    public List<Order> Orders { get; set; }
-    public List<Payment> Payments { get; set; }
+    public List<Order> Orders { get; set; } = new();
+    public List<Payment> Payments { get; set; } = new();
 
     public User(int userId, string name)
     {
-        UserId = userId;
+        Id = userId;
         Name = name;
-        Orders = new List<Order>();
-        Payments = new List<Payment>();
     }
 
     public void AddOrder(Order order)
@@ -26,8 +27,11 @@ public class User
         Payments.Add(payment);
     }
 
-    public Payment GetLatestPayment()
+    public Payment? GetLatestPayment()
     {
+        if (Payments.Count == 0)
+            return null;
+
         Payment latestPayment = Payments[0];
 
         foreach (Payment payment in Payments)
@@ -41,8 +45,11 @@ public class User
         return latestPayment;
     }
 
-    public Payment GetMostExpensivePayment()
+    public Payment? GetMostExpensivePayment()
     {
+        if (Payments.Count == 0)
+            return null;
+
         Payment mostExpensivePayment = Payments[0];
 
         foreach (Payment payment in Payments)
@@ -56,8 +63,11 @@ public class User
         return mostExpensivePayment;
     }
 
-    public Payment GetLowestPayment()
+    public Payment? GetLowestPayment()
     {
+        if (Payments.Count == 0)
+            return null;
+
         Payment lowestPayment = Payments[0];
 
         foreach (Payment payment in Payments)
@@ -73,7 +83,7 @@ public class User
 
     public List<Payment> GetPaymentsGreaterThan(decimal amount)
     {
-        List<Payment> result = new List<Payment>();
+        List<Payment> result = new();
 
         foreach (Payment payment in Payments)
         {
@@ -86,26 +96,34 @@ public class User
         return result;
     }
 
-    public Order GetMostExpensiveOrder()
+    public Order? GetMostExpensiveOrder()
     {
+        if (Orders.Count == 0)
+            return null;
+
         Order mostExpensiveOrder = Orders[0];
-        foreach(Order order in Orders)
+
+        foreach (Order order in Orders)
         {
             if (order.GetTotalOrderPrice() > mostExpensiveOrder.GetTotalOrderPrice())
             {
                 mostExpensiveOrder = order;
-            } 
+            }
         }
+
         return mostExpensiveOrder;
     }
 
-    public Order GetLatestOrder()
+    public Order? GetLatestOrder()
     {
+        if (Orders.Count == 0)
+            return null;
+
         Order latestOrder = Orders[0];
 
         foreach (Order order in Orders)
         {
-            if (order.CreatedAt > latestOrder.CreatedAt)
+            if (order.CreatedDate > latestOrder.CreatedDate)
             {
                 latestOrder = order;
             }

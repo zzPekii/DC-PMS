@@ -2,40 +2,48 @@ namespace PaintStore.Model;
 
 public class Order
 {
-    public DateTime CreatedAt { get; set; }
-    public List<PaintProduct> Products { get; set; }
+    public int Id { get; set; }
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
+    public int UserId { get; set; }
 
-    public Order(List<PaintProduct> products)
+    public List<PaintProduct> PaintProducts { get; set; } = new();
+
+    public Order(int userId, List<PaintProduct> products)
     {
-        CreatedAt = DateTime.Now;
-        Products = products;
+        UserId = userId;
+        PaintProducts = products;
     }
 
     public decimal GetTotalOrderPrice()
     {
         decimal total = 0;
-        foreach (PaintProduct product in Products)
+
+        foreach (PaintProduct product in PaintProducts)
         {
             total += product.GetFinalPrice();
         }
+
         return total;
     }
 
-    // remove product instance by its id
     public void RemoveProduct(int productId)
     {
-        PaintProduct product = Products.Find(p => p.ProductId == productId);
+        PaintProduct? product = PaintProducts.Find(p => p.Id == productId);
+
         if (product != null)
         {
-            Products.Remove(product);
+            PaintProducts.Remove(product);
         }
     }
 
-    public PaintProduct GetMostExpensivePaintProduct()
+    public PaintProduct? GetMostExpensivePaintProduct()
     {
-        PaintProduct mostExpensive = Products[0];
+        if (PaintProducts.Count == 0)
+            return null;
 
-        foreach (PaintProduct product in Products)
+        PaintProduct mostExpensive = PaintProducts[0];
+
+        foreach (PaintProduct product in PaintProducts)
         {
             if (product.Price > mostExpensive.Price)
             {
@@ -48,40 +56,46 @@ public class Order
 
     public List<PaintProduct> GetProductsByPriceRange(decimal minPrice, decimal maxPrice)
     {
-        List<PaintProduct> result = new List<PaintProduct>();
-        foreach (PaintProduct product in Products)
+        List<PaintProduct> result = new();
+
+        foreach (PaintProduct product in PaintProducts)
         {
             if (product.Price > minPrice && product.Price < maxPrice)
             {
                 result.Add(product);
             }
         }
+
         return result;
     }
 
     public Dictionary<PaintType, decimal> GetTotalPriceByPaintType()
     {
-        Dictionary<PaintType, decimal> result = new Dictionary<PaintType, decimal>();
-        foreach (PaintProduct product in Products)
+        Dictionary<PaintType, decimal> result = new();
+
+        foreach (PaintProduct product in PaintProducts)
         {
             if (result.ContainsKey(product.Type))
             {
                 result[product.Type] += product.Price;
-            } 
+            }
             else
             {
                 result.Add(product.Type, product.Price);
             }
         }
+
         return result;
     }
 
     public void DisplayOrder()
     {
         Console.WriteLine("===== Order =====");
-        Console.WriteLine($"Created At: {CreatedAt}");
+        Console.WriteLine($"Order ID: {Id}");
+        Console.WriteLine($"Created Date: {CreatedDate}");
+        Console.WriteLine($"User ID: {UserId}");
 
-        foreach (PaintProduct product in Products)
+        foreach (PaintProduct product in PaintProducts)
         {
             Console.WriteLine($"Product: {product.Name}");
             Console.WriteLine($"Final Price: ${product.GetFinalPrice():F2}");

@@ -1,25 +1,34 @@
-using System.Dynamic;
-using System.Runtime.InteropServices;
-
 namespace PaintStore.Model;
 
 public class PaintProduct : IBuyable
 {
-    public string Name { get; set; }
+    public int Id { get; private set; }
+
+    public string Name { get; set; } = string.Empty;
+
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
+
     public PaintType Type { get; set; }
 
     public PaintSpecification Specification { get; set; }
 
     public Brand Brand { get; set; }
+
     public decimal Price { get; set; }
-    // TaxRate readonly, it cannot change when instance is created
+
+    // Tax rate and default discount
     public readonly decimal TaxRate = 0.10m;
     public const decimal DefaultDiscount = 0.05m;
 
-    public int ProductId { get; private set; }
-    public PaintProduct (int productId, string name, PaintType type, PaintSpecification specification, Brand brand, decimal price)
+    public PaintProduct(
+        int productId,
+        string name,
+        PaintType type,
+        PaintSpecification specification,
+        Brand brand,
+        decimal price)
     {
-        ProductId = productId;
+        Id = productId;
         Name = name;
         Type = type;
         Specification = specification;
@@ -31,6 +40,7 @@ public class PaintProduct : IBuyable
     {
         decimal discountedPrice = Price * (1 - DefaultDiscount);
         decimal finalPrice = discountedPrice * (1 + TaxRate);
+
         return finalPrice;
     }
 
@@ -40,6 +50,7 @@ public class PaintProduct : IBuyable
         {
             return DefaultDiscount;
         }
+
         return discount;
     }
 
@@ -49,7 +60,9 @@ public class PaintProduct : IBuyable
         Console.WriteLine($"Type: {Type}");
         Console.WriteLine($"Brand: {Brand.Name}");
         Console.WriteLine($"Price: ${Price:F2}");
+
         Specification.DisplaySpecification();
+
         Console.WriteLine($"Final Price: ${GetFinalPrice():F2}");
     }
 }

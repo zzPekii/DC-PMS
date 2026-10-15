@@ -1,4 +1,4 @@
-﻿namespace DCPMS;
+﻿namespace PaintStore.Model;
 
 public class Program
 {
@@ -172,7 +172,9 @@ public class Program
             1,
             50m,
             PaymentStatus.Completed,
-            PaymentMethod.CreditCard
+            PaymentMethod.CreditCard,
+            user,
+            order
         );
 
         // Make timestamps slightly different
@@ -182,7 +184,9 @@ public class Program
             2,
             200m,
             PaymentStatus.Completed,
-            PaymentMethod.Alipay
+            PaymentMethod.Alipay,
+            user,
+            order
         );
 
 
@@ -190,7 +194,9 @@ public class Program
             3,
             120m,
             PaymentStatus.Pending,
-            PaymentMethod.BankTransfer
+            PaymentMethod.BankTransfer,
+            user,
+            order
         );
 
 
