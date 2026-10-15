@@ -39,8 +39,7 @@ public class UsersController : ControllerBase
     [HttpGet("{id:int}")]
     public ActionResult<User> GetUserById(int id)
     {
-        List<User> users = Users;
-        User user = users.FirstOrDefault(p => p.Id == id);
+        User user = Users.FirstOrDefault(p => p.Id == id);
         if (user == null)
         {
             // 404 not found
@@ -48,4 +47,6 @@ public class UsersController : ControllerBase
         }
         return Ok(user);
     }
+
+
 }
