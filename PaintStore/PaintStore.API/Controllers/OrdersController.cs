@@ -92,4 +92,25 @@ public class OrdersController : ControllerBase
         return Ok(orders);
     }
 
+    [HttpGet("last-month")]
+    public ActionResult<List<Order>> GetLastMonthOrders()
+    {
+        DateTime now = DateTime.Now;
+
+        DateTime firstDayOfThisMonth = new DateTime(now.Year, now.Month, 1);
+        DateTime firstDayOfLastMonth = firstDayOfThisMonth.AddMonths(-1);
+
+        List<Order> orders = Orders.Where(o => o.CreatedDate >= firstDayOfLastMonth && o.CreatedDate < firstDayOfThisMonth).ToList();
+
+        if (orders.Count == 0)
+        {
+            System.Console.WriteLine("HTTP [GET] 404 NOT Found /api/Orders/last-month");
+            return NotFound("No orders found last month");
+        }
+
+        System.Console.WriteLine("HTTP [GET] 200 OK /api/Orders/last-month");
+        return Ok(orders);
+    }
+
+
 }
