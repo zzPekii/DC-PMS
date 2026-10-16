@@ -39,7 +39,7 @@ public class UsersController : ControllerBase
     [HttpGet("{id:int}")]
     public ActionResult<User> GetUserById(int id)
     {
-        User user = Users.FirstOrDefault(p => p.Id == id);
+        User? user = Users.FirstOrDefault(p => p.Id == id);
         if (user == null)
         {
             // 404 not found
@@ -66,7 +66,7 @@ public class UsersController : ControllerBase
     [HttpGet("email/{email}")]
     public ActionResult<User> GetUserByEmail(string email)
     {
-        User user = Users.FirstOrDefault(p => p.Email == email);
+        User? user = Users.FirstOrDefault(p => p.Email == email);
         if (user == null)
         {
             // 404 not found

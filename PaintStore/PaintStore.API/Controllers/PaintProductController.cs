@@ -37,4 +37,19 @@ public class PaintProductsController : ControllerBase
         System.Console.WriteLine("HTTP [GET] 200 OK /api/PaintProducts/price");
         return Ok(products);
     }
+
+    [HttpGet("{id:int}")]
+    public ActionResult<PaintProduct> GetPaintProductsByPaintId(int id)
+    {
+        PaintProduct? product = PaintProducts.FirstOrDefault(p => p.Id == id);
+
+        if (product == null)
+        {
+            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/PaintProducts/{id}");
+            return NotFound("Can not find the product");
+        }
+
+        System.Console.WriteLine($"HTTP [GET] 200 OK /api/PaintProducts/{id}");
+        return Ok(product);
+    }
 }
