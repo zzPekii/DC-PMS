@@ -62,4 +62,19 @@ public class OrdersController : ControllerBase
         return Ok(orders);
     }
 
+    [HttpGet("paint/{paintId:int}")]
+    public ActionResult<List<Order>> GetOrdersByPaintId(int paintId)
+    {
+        List<Order> orders = Orders.Where(o => o.PaintProducts.Any(p => p.Id == paintId)).ToList();
+
+        if (orders.Count == 0)
+        {
+            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/Orders/paint/{paintId}");
+            return NotFound("No orders found for this product");
+        }
+
+        System.Console.WriteLine($"HTTP [GET] 200 OK /api/Orders/paint/{paintId}");
+        return Ok(orders);
+    }
+
 }
