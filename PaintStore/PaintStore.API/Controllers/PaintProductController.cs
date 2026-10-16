@@ -52,4 +52,23 @@ public class PaintProductsController : ControllerBase
         System.Console.WriteLine($"HTTP [GET] 200 OK /api/PaintProducts/{id}");
         return Ok(product);
     }
+
+    [HttpGet("user/{userId:int}")]
+    public ActionResult<List<PaintProduct>> GetPraintProductsByUserId(int userId)
+    {
+        List<PaintProduct> products = OrdersController.Orders
+            .Where(o => o.UserId == userId)
+            .SelectMany(o => o.PaintProducts)
+            .DistinctBy(p => p.Id)
+            .ToList();
+
+        if (products.Count == 0)
+        {
+            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/PaintProducts/user/{userId}");
+            return NotFound("No products found for this user");
+        }
+
+        System.Console.WriteLine($"HTTP [GET] 200 OK /api/PaintProducts/user/{userId}");
+        return Ok(products);
+    }
 }
