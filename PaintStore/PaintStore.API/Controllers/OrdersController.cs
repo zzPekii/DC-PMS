@@ -77,4 +77,19 @@ public class OrdersController : ControllerBase
         return Ok(orders);
     }
 
+    [HttpGet("user/{userId:int}")]
+    public ActionResult<List<Order>> GetOrdersByUserId(int userId)
+    {
+        List<Order> orders = Orders.Where(o => o.UserId == userId).ToList();
+
+        if (orders.Count == 0)
+        {
+            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/Orders/user/{userId}");
+            return NotFound("No orders found for this user");
+        }
+
+        System.Console.WriteLine($"HTTP [GET] 200 OK /api/Orders/user/{userId}");
+        return Ok(orders);
+    }
+
 }
