@@ -39,4 +39,12 @@ public class OrdersController : ControllerBase
             CreatedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1)
         }
     };
+
+    [HttpGet]
+    public ActionResult<List<Order>> GetAllOrders()
+    {
+        System.Console.WriteLine("HTTP [GET] 200 OK /api/Orders");
+        return Ok(Orders);
+    }
+
 }
