@@ -47,4 +47,19 @@ public class OrdersController : ControllerBase
         return Ok(Orders);
     }
 
+    [HttpGet("price")]
+    public ActionResult<List<Order>> GetOrdersByPriceRange(decimal min, decimal max)
+    {
+        List<Order> orders = Orders.Where(o => o.GetTotalOrderPrice() >= min && o.GetTotalOrderPrice() <= max).ToList();
+
+        if (orders.Count == 0)
+        {
+            System.Console.WriteLine("HTTP [GET] 404 NOT Found /api/Orders/price");
+            return NotFound("No orders in this price range");
+        }
+
+        System.Console.WriteLine("HTTP [GET] 200 OK /api/Orders/price");
+        return Ok(orders);
+    }
+
 }
