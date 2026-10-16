@@ -1,0 +1,12 @@
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/bin/Debug/net10.0/PaintStore.Model.deps.json
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/bin/Debug/net10.0/PaintStore.Model.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/bin/Debug/net10.0/PaintStore.Model.pdb
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/obj/Debug/net10.0/PaintStore.Model.GeneratedMSBuildEditorConfig.editorconfig
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/obj/Debug/net10.0/PaintStore.Model.AssemblyInfoInputs.cache
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/obj/Debug/net10.0/PaintStore.Model.AssemblyInfo.cs
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/obj/Debug/net10.0/PaintStore.Model.csproj.CoreCompileInputs.cache
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/obj/Debug/net10.0/PaintStore.Model.sourcelink.json
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/obj/Debug/net10.0/PaintStore.Model.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/obj/Debug/net10.0/refint/PaintStore.Model.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/obj/Debug/net10.0/PaintStore.Model.pdb
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.Model/obj/Debug/net10.0/ref/PaintStore.Model.dll
