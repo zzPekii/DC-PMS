@@ -22,4 +22,19 @@ public class PaintProductsController : ControllerBase
         System.Console.WriteLine("HTTP [GET] 200 OK /api/PaintProducts");
         return Ok(PaintProducts);
     }
+
+    [HttpGet("price")]
+    public ActionResult<List<PaintProduct>> GetProductsByPriceRange(decimal min, decimal max)
+    {
+        List<PaintProduct> products = PaintProducts.Where(p => p.Price >= min && p.Price <= max).ToList();
+
+        if (products.Count == 0)
+        {
+            System.Console.WriteLine("HTTP [GET] 404 NOT Found /api/PaintProducts/price");
+            return NotFound("No products in this price range");
+        }
+
+        System.Console.WriteLine("HTTP [GET] 200 OK /api/PaintProducts/price");
+        return Ok(products);
+    }
 }
