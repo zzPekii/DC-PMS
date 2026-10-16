@@ -112,5 +112,18 @@ public class OrdersController : ControllerBase
         return Ok(orders);
     }
 
+    [HttpGet("date")]
+    public ActionResult<List<Order>> GetOrdersByDate(DateTime date)
+    {
+        List<Order> orders = Orders.Where(o => o.CreatedDate.Date == date.Date).ToList();
 
+        if (orders.Count == 0)
+        {
+            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/Orders/date?date={date:yyyy-MM-dd}");
+            return NotFound("No orders found on this date");
+        }
+
+        System.Console.WriteLine($"HTTP [GET] 200 OK /api/Orders/date?date={date:yyyy-MM-dd}");
+        return Ok(orders);
+    }
 }
