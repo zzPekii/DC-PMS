@@ -1,4 +1,7 @@
+
 using Microsoft.AspNetCore.Mvc;
+using PaintStore.API.DTOs.Users;
+using PaintStore.API.Interfaces.Services;
 using PaintStore.Model;
 
 namespace PaintStore.API.Controllers;
@@ -7,73 +10,146 @@ namespace PaintStore.API.Controllers;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    // mock data
-    private static readonly List<User> Users = new()
+    private readonly IUserService _userService;
+
+    public UsersController(IUserService userService)
     {
-        new User(1, "Tom")
-        {
-            Email = "tom@gmail.com",
-            Phone = "0411111111"
-        },
-
-        new User(2, "Jack")
-        {
-            Email = "jack@gmail.com",
-            Phone = "0422222222"
-        },
-
-        new User(3, "Alice")
-        {
-            Email = "alice@gmail.com",
-            Phone = "0433333333"
-        }
-    };
+        _userService = userService;
+    }
 
     [HttpGet]
-    public ActionResult<List<User>> GetUsers()
+    public ActionResult<List<UserResponseDto>> GetUsers()
     {
-        System.Console.WriteLine("HTTP [GET] 200 OK /api/Users");
-        return Ok(Users);
-    }
+        List<UserResponseDto> users = _userService.GetUsers().Select(u => ToResponseDto(u)).ToList();
 
-    [HttpGet("{id:int}")]
-    public ActionResult<User> GetUserById(int id)
-    {
-        User? user = Users.FirstOrDefault(p => p.Id == id);
-        if (user == null)
-        {
-            // 404 not found
-            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/Users/{id}");
-            return NotFound("Can not find the user");
-        }
-        System.Console.WriteLine($"HTTP [GET] 200 OK /api/Users/{id}");
-        return Ok(user);
-    }
-
-    [HttpGet("name/{name}")]
-    public ActionResult<List<User>> GetUserByName(string name)
-    {
-        List<User> users = Users.Where(u => u.Name == name).ToList();
-        if (users.Count == 0)
-        {
-            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/Users/{name}");
-            return NotFound("No such name user");
-        }
-        System.Console.WriteLine($"HTTP [GET] 200 OK /api/User/{name}");
         return Ok(users);
     }
 
-    [HttpGet("email/{email}")]
-    public ActionResult<User> GetUserByEmail(string email)
+    [HttpGet("{id:int}")]
+    public ActionResult<UserResponseDto> GetUserById(int id)
     {
-        User? user = Users.FirstOrDefault(p => p.Email == email);
+        User? user = _userService.GetUserById(id);
+
         if (user == null)
         {
-            // 404 not found
-            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/Users/email/{email}");
             return NotFound("Can not find the user");
         }
-        System.Console.WriteLine($"HTTP [GET] 200 OK /api/Users/email/{email}");
-        return Ok(user);
+
+        return Ok(ToResponseDto(user));
+    }
+
+    [HttpGet("name/{name}")]
+    public ActionResult<List<UserResponseDto>> GetUserByName(string name)
+    {
+        List<User> users = _userService.GetUserByName(name);
+
+        if (users.Count == 0)
+        {
+            return NotFound("No such name user");
+        }
+
+        return Ok(users.Select(u => ToResponseDto(u)).ToList());
+    }
+
+    [HttpGet("email/{email}")]
+    public ActionResult<UserResponseDto> GetUserByEmail(string email)
+    {
+        User? user = _userService.GetUserByEmail(email);
+
+        if (user == null)
+        {
+            return NotFound("Can not find the user");
+        }
+
+        return Ok(ToResponseDto(user));
+    }
+
+    [HttpPost]
+    public ActionResult<UserResponseDto> CreateUser(CreateUserDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Name) ||
+            string.IsNullOrWhiteSpace(dto.Email))
+        {
+            return BadRequest("Name and Email cannot be empty");
+        }
+
+        if (_userService.GetUserByEmail(dto.Email) != null)
+        {
+            return BadRequest("Email already exists");
+        }
+
+        User user = new User(0, dto.Name)
+        {
+            Email = dto.Email,
+            Phone = dto.Phone
+        };
+
+        User createdUser = _userService.AddUser(user);
+
+        return StatusCode(201, ToResponseDto(createdUser));
+    }
+
+    [HttpPut("{id:int}")]
+    public ActionResult<UserResponseDto> UpdateUser(int id, UpdateUserDto dto)
+    {
+        User? existingUser = _userService.GetUserById(id);
+
+        if (existingUser == null)
+        {
+            return NotFound("Can not find the user");
+        }
+
+        if (string.IsNullOrWhiteSpace(dto.Name) ||
+            string.IsNullOrWhiteSpace(dto.Email))
+        {
+            return BadRequest("Name and Email cannot be empty");
+        }
+
+        User? emailOwner = _userService.GetUserByEmail(dto.Email);
+
+        if (emailOwner != null && emailOwner.Id != id)
+        {
+            return BadRequest("Email already exists");
+        }
+
+        User user = new User(id, dto.Name)
+        {
+            Email = dto.Email,
+            Phone = dto.Phone
+        };
+
+        bool updated = _userService.UpdateUser(user);
+
+        if (!updated)
+        {
+            return NotFound("Can not find the user");
+        }
+
+        return Ok(ToResponseDto(existingUser));
+    }
+
+    [HttpDelete("{id:int}")]
+    public IActionResult DeleteUser(int id)
+    {
+        bool deleted = _userService.DeleteUser(id);
+
+        if (!deleted)
+        {
+            return NotFound("Can not find the user");
+        }
+
+        return NoContent();
+    }
+
+    private static UserResponseDto ToResponseDto(User user)
+    {
+        return new UserResponseDto
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Phone = user.Phone,
+            CreatedDate = user.CreatedDate
+        };
     }
 }
