@@ -61,4 +61,6 @@ public class InMemoryStore
     };
 
     public List<PaintProduct> PaintProducts { get; } = InitialPaintProducts;
+
+    public List<Order> Orders { get; } = new();
 }

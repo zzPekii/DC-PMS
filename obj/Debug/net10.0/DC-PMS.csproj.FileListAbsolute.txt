@@ -13,3 +13,7 @@
 /Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.pdb
 /Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.genruntimeconfig.cache
 /Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/ref/DC-PMS.dll
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.csproj.AssemblyReference.cache
+/Users/dawn/Desktop/camp/DC-PMS/bin/Debug/net10.0/PaintStore.Model.dll
+/Users/dawn/Desktop/camp/DC-PMS/bin/Debug/net10.0/PaintStore.Model.pdb
+/Users/dawn/Desktop/camp/DC-PMS/obj/Debug/net10.0/DC-PMS.csproj.Up2Date

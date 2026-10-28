@@ -19,6 +19,7 @@ public class PaintProduct : IBuyable
     // Tax rate and default discount
     public readonly decimal TaxRate = 0.10m;
     public const decimal DefaultDiscount = 0.05m;
+    public int Stock { get; set; }
 
     public PaintProduct(
         int productId,
@@ -52,6 +53,11 @@ public class PaintProduct : IBuyable
         }
 
         return discount;
+    }
+
+    public void SetId(int id)
+    {
+        Id = id;
     }
 
     public void DisplayInfo()

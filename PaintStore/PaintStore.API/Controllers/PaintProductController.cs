@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using PaintStore.API.Data;
 using PaintStore.API.DTOs.PaintProducts;
 using PaintStore.API.Interfaces.Services;
 using PaintStore.Model;
@@ -11,15 +10,14 @@ namespace PaintStore.API.Controllers;
 public class PaintProductsController : ControllerBase
 {
     private readonly IPaintProductService _paintProductService;
+    private readonly IOrderService _orderService;
 
-    // Temporary compatibility with the old OrdersController.
-    // Remove this after refactoring the Order module.
-    public static readonly List<PaintProduct> PaintProducts =
-        InMemoryStore.InitialPaintProducts;
-
-    public PaintProductsController(IPaintProductService paintProductService)
+    public PaintProductsController(
+        IPaintProductService paintProductService,
+        IOrderService orderService)
     {
         _paintProductService = paintProductService;
+        _orderService = orderService;
     }
 
     [HttpGet]
@@ -151,7 +149,6 @@ public class PaintProductsController : ControllerBase
         return NoContent();
     }
 
-    // Week 3: Get products by price range
     [HttpGet("price")]
     public ActionResult<List<PaintProductResponseDto>> GetProductsByPriceRange(
         decimal min, decimal max)
@@ -175,14 +172,12 @@ public class PaintProductsController : ControllerBase
         return Ok(products);
     }
 
-    // Week 3: Get products by user ID
-    // Will be moved into Service during the Order refactor.
     [HttpGet("user/{userId:int}")]
     public ActionResult<List<PaintProductResponseDto>> GetPaintProductsByUserId(
         int userId)
     {
-        List<PaintProductResponseDto> products = OrdersController.Orders
-            .Where(o => o.UserId == userId)
+        List<PaintProductResponseDto> products = _orderService
+            .GetOrdersByUserId(userId)
             .SelectMany(o => o.PaintProducts)
             .DistinctBy(p => p.Id)
             .Select(p => ToResponseDto(p))
