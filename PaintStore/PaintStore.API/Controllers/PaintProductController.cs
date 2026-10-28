@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using PaintStore.API.Data;
+using PaintStore.API.DTOs.PaintProducts;
+using PaintStore.API.Interfaces.Services;
 using PaintStore.Model;
 
 namespace PaintStore.API.Controllers;
@@ -7,68 +10,206 @@ namespace PaintStore.API.Controllers;
 [Route("api/[controller]")]
 public class PaintProductsController : ControllerBase
 {
-    // mock data
-    public static readonly List<PaintProduct> PaintProducts = new()
-    {
-        new PaintProduct(1, "White Paint", default, null!, null!, 50m),
-        new PaintProduct(2, "Black Paint", default, null!, null!, 80m),
-        new PaintProduct(3, "Blue Paint", default, null!, null!, 120m),
-        new PaintProduct(4, "Red Paint", default, null!, null!, 200m)
-    };
+    private readonly IPaintProductService _paintProductService;
 
-    [HttpGet]
-    public ActionResult<List<PaintProduct>> GetAllPaintProducts()
+    // Temporary compatibility with the old OrdersController.
+    // Remove this after refactoring the Order module.
+    public static readonly List<PaintProduct> PaintProducts =
+        InMemoryStore.InitialPaintProducts;
+
+    public PaintProductsController(IPaintProductService paintProductService)
     {
-        System.Console.WriteLine("HTTP [GET] 200 OK /api/PaintProducts");
-        return Ok(PaintProducts);
+        _paintProductService = paintProductService;
     }
 
-    [HttpGet("price")]
-    public ActionResult<List<PaintProduct>> GetProductsByPriceRange(decimal min, decimal max)
+    [HttpGet]
+    public ActionResult<List<PaintProductResponseDto>> GetAllPaintProducts()
     {
-        List<PaintProduct> products = PaintProducts.Where(p => p.Price >= min && p.Price <= max).ToList();
+        List<PaintProductResponseDto> products =
+            _paintProductService.GetPaintProducts()
+                .Select(p => ToResponseDto(p))
+                .ToList();
 
-        if (products.Count == 0)
-        {
-            System.Console.WriteLine("HTTP [GET] 404 NOT Found /api/PaintProducts/price");
-            return NotFound("No products in this price range");
-        }
-
-        System.Console.WriteLine("HTTP [GET] 200 OK /api/PaintProducts/price");
         return Ok(products);
     }
 
     [HttpGet("{id:int}")]
-    public ActionResult<PaintProduct> GetPaintProductsByPaintId(int id)
+    public ActionResult<PaintProductResponseDto> GetPaintProductById(int id)
     {
-        PaintProduct? product = PaintProducts.FirstOrDefault(p => p.Id == id);
+        PaintProduct? product = _paintProductService.GetPaintProductById(id);
 
         if (product == null)
         {
-            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/PaintProducts/{id}");
-            return NotFound("Can not find the product");
+            return NotFound("Cannot find the product");
         }
 
-        System.Console.WriteLine($"HTTP [GET] 200 OK /api/PaintProducts/{id}");
-        return Ok(product);
+        return Ok(ToResponseDto(product));
     }
 
-    [HttpGet("user/{userId:int}")]
-    public ActionResult<List<PaintProduct>> GetPraintProductsByUserId(int userId)
+    [HttpGet("search")]
+    public ActionResult<List<PaintProductResponseDto>> SearchPaintProducts(
+        string? name,
+        string? brand,
+        decimal? minPrice,
+        decimal? maxPrice)
     {
-        List<PaintProduct> products = OrdersController.Orders
+        if (minPrice.HasValue && maxPrice.HasValue &&
+            minPrice.Value > maxPrice.Value)
+        {
+            return BadRequest("Invalid price range");
+        }
+
+        List<PaintProductResponseDto> products =
+            _paintProductService.SearchPaintProducts(
+                name, brand, minPrice, maxPrice)
+                .Select(p => ToResponseDto(p))
+                .ToList();
+
+        return Ok(products);
+    }
+
+    [HttpPost]
+    public ActionResult<PaintProductResponseDto> CreatePaintProduct(
+        CreatePaintProductDto dto)
+    {
+        PaintProduct product = new PaintProduct(
+            0,
+            dto.Name,
+            dto.Type,
+            new PaintSpecification(dto.Color, dto.SizeInLiters),
+            new Brand(dto.Brand),
+            dto.Price
+        )
+        {
+            Stock = dto.Stock
+        };
+
+        string? error = _paintProductService.ValidatePaintProduct(product);
+
+        if (error != null)
+        {
+            return BadRequest(error);
+        }
+
+        PaintProduct createdProduct =
+            _paintProductService.AddPaintProduct(product);
+
+        return StatusCode(201, ToResponseDto(createdProduct));
+    }
+
+    [HttpPut("{id:int}")]
+    public ActionResult<PaintProductResponseDto> UpdatePaintProduct(
+        int id, UpdatePaintProductDto dto)
+    {
+        PaintProduct? existingProduct =
+            _paintProductService.GetPaintProductById(id);
+
+        if (existingProduct == null)
+        {
+            return NotFound("Cannot find the product");
+        }
+
+        PaintProduct product = new PaintProduct(
+            id,
+            dto.Name,
+            dto.Type,
+            new PaintSpecification(dto.Color, dto.SizeInLiters),
+            new Brand(dto.Brand),
+            dto.Price
+        )
+        {
+            Stock = dto.Stock
+        };
+
+        string? error = _paintProductService.ValidatePaintProduct(product);
+
+        if (error != null)
+        {
+            return BadRequest(error);
+        }
+
+        bool updated = _paintProductService.UpdatePaintProduct(product);
+
+        if (!updated)
+        {
+            return NotFound("Cannot find the product");
+        }
+
+        return Ok(ToResponseDto(existingProduct));
+    }
+
+    [HttpDelete("{id:int}")]
+    public IActionResult DeletePaintProduct(int id)
+    {
+        bool deleted = _paintProductService.DeletePaintProduct(id);
+
+        if (!deleted)
+        {
+            return NotFound("Cannot find the product");
+        }
+
+        return NoContent();
+    }
+
+    // Week 3: Get products by price range
+    [HttpGet("price")]
+    public ActionResult<List<PaintProductResponseDto>> GetProductsByPriceRange(
+        decimal min, decimal max)
+    {
+        if (min > max)
+        {
+            return BadRequest("Invalid price range");
+        }
+
+        List<PaintProductResponseDto> products =
+            _paintProductService.SearchPaintProducts(
+                null, null, min, max)
+                .Select(p => ToResponseDto(p))
+                .ToList();
+
+        if (products.Count == 0)
+        {
+            return NotFound("No products in this price range");
+        }
+
+        return Ok(products);
+    }
+
+    // Week 3: Get products by user ID
+    // Will be moved into Service during the Order refactor.
+    [HttpGet("user/{userId:int}")]
+    public ActionResult<List<PaintProductResponseDto>> GetPaintProductsByUserId(
+        int userId)
+    {
+        List<PaintProductResponseDto> products = OrdersController.Orders
             .Where(o => o.UserId == userId)
             .SelectMany(o => o.PaintProducts)
             .DistinctBy(p => p.Id)
+            .Select(p => ToResponseDto(p))
             .ToList();
 
         if (products.Count == 0)
         {
-            System.Console.WriteLine($"HTTP [GET] 404 NOT Found /api/PaintProducts/user/{userId}");
             return NotFound("No products found for this user");
         }
 
-        System.Console.WriteLine($"HTTP [GET] 200 OK /api/PaintProducts/user/{userId}");
         return Ok(products);
+    }
+
+    private static PaintProductResponseDto ToResponseDto(
+        PaintProduct product)
+    {
+        return new PaintProductResponseDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Type = product.Type,
+            Brand = product.Brand.Name,
+            Color = product.Specification.Color,
+            SizeInLiters = product.Specification.SizeInLiters,
+            Price = product.Price,
+            Stock = product.Stock,
+            CreatedDate = product.CreatedDate
+        };
     }
 }
