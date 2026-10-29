@@ -1,3 +1,4 @@
+
 name: PaintStore CI
 
 on:
@@ -12,37 +13,38 @@ on:
       - main
 
   workflow_dispatch:
-    permissions:
-      contents: read
 
-    jobs:
-      build-and-test:
-        name: Build and Test
-        runs-on: ubuntu-latest
+permissions:
+  contents: read
 
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v7
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
 
-          - name: Setup .NET 10
-            uses: actions/setup-dotnet@v6
-            with:
-              dotnet-version: '10.0.x'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-          - name: Restore dependencies
-            run: dotnet restore PaintStore/PaintStore.Tests/PaintStore.Tests.csproj
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
 
-          - name: Build API
-            run: dotnet build PaintStore/PaintStore.API/PaintStore.API.csproj --configuration Release --no-restore
+      - name: Restore dependencies
+        run: dotnet restore PaintStore/PaintStore.Tests/PaintStore.Tests.csproj
 
-          - name: Run unit tests
-            run: dotnet test PaintStore/PaintStore.Tests/PaintStore.Tests.csproj --configuration Release --no-restore
+      - name: Build API
+        run: dotnet build PaintStore/PaintStore.API/PaintStore.API.csproj --configuration Release --no-restore
 
-          - name: Publish API
-            run: dotnet publish PaintStore/PaintStore.API/PaintStore.API.csproj --configuration Release --no-restore --output ./publish
+      - name: Run unit tests
+        run: dotnet test PaintStore/PaintStore.Tests/PaintStore.Tests.csproj --configuration Release --no-restore
 
-          - name: Upload published API
-            uses: actions/upload-artifact@v4
-            with:
-              name: paintstore-api
-              path: ./publish/
+      - name: Publish API
+        run: dotnet publish PaintStore/PaintStore.API/PaintStore.API.csproj --configuration Release --no-restore --output ./publish
+
+      - name: Upload published API
+        uses: actions/upload-artifact@v4
+        with:
+          name: paintstore-api
+          path: ./publish/
