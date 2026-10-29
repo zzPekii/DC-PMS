@@ -12,9 +12,7 @@ public class PaintProductsController : ControllerBase
     private readonly IPaintProductService _paintProductService;
     private readonly IOrderService _orderService;
 
-    public PaintProductsController(
-        IPaintProductService paintProductService,
-        IOrderService orderService)
+    public PaintProductsController(IPaintProductService paintProductService, IOrderService orderService)
     {
         _paintProductService = paintProductService;
         _orderService = orderService;
@@ -23,10 +21,7 @@ public class PaintProductsController : ControllerBase
     [HttpGet]
     public ActionResult<List<PaintProductResponseDto>> GetAllPaintProducts()
     {
-        List<PaintProductResponseDto> products =
-            _paintProductService.GetPaintProducts()
-                .Select(p => ToResponseDto(p))
-                .ToList();
+        List<PaintProductResponseDto> products = _paintProductService.GetPaintProducts().Select(p => ToResponseDto(p)).ToList();
 
         return Ok(products);
     }
@@ -45,11 +40,7 @@ public class PaintProductsController : ControllerBase
     }
 
     [HttpGet("search")]
-    public ActionResult<List<PaintProductResponseDto>> SearchPaintProducts(
-        string? name,
-        string? brand,
-        decimal? minPrice,
-        decimal? maxPrice)
+    public ActionResult<List<PaintProductResponseDto>> SearchPaintProducts(string? name, string? brand, decimal? minPrice, decimal? maxPrice)
     {
         if (minPrice.HasValue && maxPrice.HasValue &&
             minPrice.Value > maxPrice.Value)
@@ -57,11 +48,7 @@ public class PaintProductsController : ControllerBase
             return BadRequest("Invalid price range");
         }
 
-        List<PaintProductResponseDto> products =
-            _paintProductService.SearchPaintProducts(
-                name, brand, minPrice, maxPrice)
-                .Select(p => ToResponseDto(p))
-                .ToList();
+        List<PaintProductResponseDto> products = _paintProductService.SearchPaintProducts(name, brand, minPrice, maxPrice).Select(p => ToResponseDto(p)).ToList();
 
         return Ok(products);
     }
@@ -89,8 +76,7 @@ public class PaintProductsController : ControllerBase
             return BadRequest(error);
         }
 
-        PaintProduct createdProduct =
-            _paintProductService.AddPaintProduct(product);
+        PaintProduct createdProduct = _paintProductService.AddPaintProduct(product);
 
         return StatusCode(201, ToResponseDto(createdProduct));
     }
@@ -99,8 +85,7 @@ public class PaintProductsController : ControllerBase
     public ActionResult<PaintProductResponseDto> UpdatePaintProduct(
         int id, UpdatePaintProductDto dto)
     {
-        PaintProduct? existingProduct =
-            _paintProductService.GetPaintProductById(id);
+        PaintProduct? existingProduct = _paintProductService.GetPaintProductById(id);
 
         if (existingProduct == null)
         {
@@ -150,8 +135,7 @@ public class PaintProductsController : ControllerBase
     }
 
     [HttpGet("price")]
-    public ActionResult<List<PaintProductResponseDto>> GetProductsByPriceRange(
-        decimal min, decimal max)
+    public ActionResult<List<PaintProductResponseDto>> GetProductsByPriceRange(decimal min, decimal max)
     {
         if (min > max)
         {
@@ -159,10 +143,7 @@ public class PaintProductsController : ControllerBase
         }
 
         List<PaintProductResponseDto> products =
-            _paintProductService.SearchPaintProducts(
-                null, null, min, max)
-                .Select(p => ToResponseDto(p))
-                .ToList();
+            _paintProductService.SearchPaintProducts(null, null, min, max).Select(p => ToResponseDto(p)).ToList();
 
         if (products.Count == 0)
         {

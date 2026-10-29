@@ -10,16 +10,22 @@ namespace PaintStore.API.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly ILogger<UsersController> _logger;
 
-    public UsersController(IUserService userService)
+    public UsersController(IUserService userService, ILogger<UsersController> logger)
     {
         _userService = userService;
+        _logger = logger;
     }
 
     [HttpGet]
     public ActionResult<List<UserResponseDto>> GetUsers()
     {
-        List<UserResponseDto> users = _userService.GetUsers().Select(u => ToResponseDto(u)).ToList();
+        _logger.LogInformation("Getting all users");
+
+        List<UserResponseDto> users = _userService.GetUsers()
+            .Select(u => ToResponseDto(u))
+            .ToList();
 
         return Ok(users);
     }
@@ -27,10 +33,13 @@ public class UsersController : ControllerBase
     [HttpGet("{id:int}")]
     public ActionResult<UserResponseDto> GetUserById(int id)
     {
+        _logger.LogInformation("Getting user with ID {UserId}", id);
+
         User? user = _userService.GetUserById(id);
 
         if (user == null)
         {
+            _logger.LogWarning("User {UserId} not found", id);
             return NotFound("Can not find the user");
         }
 
@@ -44,6 +53,7 @@ public class UsersController : ControllerBase
 
         if (users.Count == 0)
         {
+            _logger.LogWarning("No users found with name {UserName}", name);
             return NotFound("No such name user");
         }
 
@@ -57,6 +67,7 @@ public class UsersController : ControllerBase
 
         if (user == null)
         {
+            _logger.LogWarning("User with email {Email} not found", email);
             return NotFound("Can not find the user");
         }
 
@@ -69,11 +80,13 @@ public class UsersController : ControllerBase
         if (string.IsNullOrWhiteSpace(dto.Name) ||
             string.IsNullOrWhiteSpace(dto.Email))
         {
+            _logger.LogWarning("User creation failed: missing name or email");
             return BadRequest("Name and Email cannot be empty");
         }
 
         if (_userService.GetUserByEmail(dto.Email) != null)
         {
+            _logger.LogWarning("User creation failed: duplicate email");
             return BadRequest("Email already exists");
         }
 
@@ -85,6 +98,10 @@ public class UsersController : ControllerBase
 
         User createdUser = _userService.AddUser(user);
 
+        _logger.LogInformation(
+            "User {UserId} created successfully",
+            createdUser.Id);
+
         return StatusCode(201, ToResponseDto(createdUser));
     }
 
@@ -95,12 +112,17 @@ public class UsersController : ControllerBase
 
         if (existingUser == null)
         {
+            _logger.LogWarning("User {UserId} not found for update", id);
             return NotFound("Can not find the user");
         }
 
         if (string.IsNullOrWhiteSpace(dto.Name) ||
             string.IsNullOrWhiteSpace(dto.Email))
         {
+            _logger.LogWarning(
+                "User {UserId} update failed: invalid input",
+                id);
+
             return BadRequest("Name and Email cannot be empty");
         }
 
@@ -108,6 +130,10 @@ public class UsersController : ControllerBase
 
         if (emailOwner != null && emailOwner.Id != id)
         {
+            _logger.LogWarning(
+                "User {UserId} update failed: duplicate email",
+                id);
+
             return BadRequest("Email already exists");
         }
 
@@ -121,8 +147,13 @@ public class UsersController : ControllerBase
 
         if (!updated)
         {
+            _logger.LogWarning("User {UserId} not found for update", id);
             return NotFound("Can not find the user");
         }
+
+        _logger.LogInformation(
+            "User {UserId} updated successfully",
+            id);
 
         return Ok(ToResponseDto(existingUser));
     }
@@ -134,8 +165,13 @@ public class UsersController : ControllerBase
 
         if (!deleted)
         {
+            _logger.LogWarning("User {UserId} not found for deletion", id);
             return NotFound("Can not find the user");
         }
+
+        _logger.LogInformation(
+            "User {UserId} deleted successfully",
+            id);
 
         return NoContent();
     }

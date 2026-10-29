@@ -1,11 +1,20 @@
-
 using PaintStore.API.Data;
 using PaintStore.API.Interfaces.Repositories;
 using PaintStore.API.Interfaces.Services;
 using PaintStore.API.Repositories;
 using PaintStore.API.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration
+        .MinimumLevel.Information()
+        .WriteTo.Console()
+        .WriteTo.File(
+            "logs/log-.txt",
+            rollingInterval: RollingInterval.Day);
+});
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

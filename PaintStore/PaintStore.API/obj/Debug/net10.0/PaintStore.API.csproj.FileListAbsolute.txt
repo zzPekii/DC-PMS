@@ -34,3 +34,13 @@
 /Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/obj/Debug/net10.0/PaintStore.API.pdb
 /Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/obj/Debug/net10.0/PaintStore.API.genruntimeconfig.cache
 /Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/obj/Debug/net10.0/ref/PaintStore.API.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/bin/Debug/net10.0/Microsoft.Extensions.DependencyModel.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/bin/Debug/net10.0/Serilog.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/bin/Debug/net10.0/Serilog.AspNetCore.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/bin/Debug/net10.0/Serilog.Extensions.Hosting.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/bin/Debug/net10.0/Serilog.Extensions.Logging.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/bin/Debug/net10.0/Serilog.Formatting.Compact.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/bin/Debug/net10.0/Serilog.Settings.Configuration.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/bin/Debug/net10.0/Serilog.Sinks.Console.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/bin/Debug/net10.0/Serilog.Sinks.Debug.dll
+/Users/dawn/Desktop/camp/DC-PMS/PaintStore/PaintStore.API/bin/Debug/net10.0/Serilog.Sinks.File.dll
