@@ -7,11 +7,18 @@ public class Order
     public int UserId { get; set; }
 
     public List<PaintProduct> PaintProducts { get; set; } = new();
+    public List<OrderItem> Items { get; set; } = new();
+
+    public string Status { get; set; } = "Pending";
 
     public Order(int userId, List<PaintProduct> products)
     {
         UserId = userId;
         PaintProducts = products;
+    }
+    public decimal CalculateTotalAmount()
+    {
+        return Items.Sum(item => item.UnitPrice * item.Quantity);
     }
 
     public decimal GetTotalOrderPrice()

@@ -132,6 +132,12 @@ public class User
         return latestOrder;
     }
 
+    public void SetId(int id)
+    {
+        Id = id;
+        return;
+    }
+
     public void DisplayOrders()
     {
         Console.WriteLine($"===== Orders for {Name} =====");
